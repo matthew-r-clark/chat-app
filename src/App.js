@@ -1,25 +1,65 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import SocketContext from './SocketContext';
+import UserList from './UserList';
+import MessageList from './MessageList';
+import TypingStatus from './TypingStatus';
+import MessageInput from './MessageInput';
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://192.168.1.148:4001";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const socket = socketIOClient(ENDPOINT, {transports: ['websocket']});
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      users: [],
+      selected: 'General',
+    };
+  }
+
+  componentDidMount() {
+    socket.on('request username', () => {
+      let name = prompt('Please enter your name:')
+      this.setState({username: name});
+      socket.emit('join chat', {username: name});
+    });
+
+    socket.on('invalid name', (message) => {
+      let name = prompt(message)
+      this.setState({username: name});
+      socket.emit('join chat', {username: name});
+    });
+
+    socket.on('online', data => {
+      let users = data.online.filter(u => u.username !== this.state.username);
+      this.setState({users: users});
+    });
+  }
+
+  setChat(event) {
+    event.preventDefault();
+    let username = event.currentTarget.getAttribute('data-username');
+    this.setState({selected: username});
+  }
+
+  render() {
+    let username = this.state.username;
+    let users = this.state.users;
+    let selected = this.state.selected;
+
+    return (
+      <SocketContext.Provider value={socket}>
+        <div className="app">
+          <UserList username={username} users={users} selected={selected} setChat={this.setChat.bind(this)}/>
+          <MessageList username={username} selected={selected}/>
+          <TypingStatus selected={selected}/>
+          <MessageInput username={username} selected={selected}/>
+        </div>
+      </SocketContext.Provider>
+    );
+  }
 }
 
 export default App;
