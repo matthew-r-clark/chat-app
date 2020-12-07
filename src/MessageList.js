@@ -9,9 +9,9 @@ class MessageList extends React.Component {
 
   componentDidMount() {
     const socket = this.context;
-    let username = this.props.username;
 
     socket.on('chat message', message => {
+      let username = this.props.username;
       let sender = message.sender;
       let recipient = message.recipient;
       let date = getDate();
