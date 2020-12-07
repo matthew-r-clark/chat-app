@@ -5,9 +5,9 @@ import MessageList from './MessageList';
 import TypingStatus from './TypingStatus';
 import MessageInput from './MessageInput';
 import socketIOClient from "socket.io-client";
-const ENDPOINT = "http://192.168.1.148:4001";
+const SERVER_ENDPOINT = process.env.SERVER_ENDPOINT;
 
-const socket = socketIOClient(ENDPOINT, {transports: ['websocket']});
+const socket = socketIOClient(SERVER_ENDPOINT, {transports: ['websocket']});
 
 class App extends React.Component {
   constructor(props) {
