@@ -5,7 +5,7 @@ import MessageList from './MessageList';
 import TypingStatus from './TypingStatus';
 import MessageInput from './MessageInput';
 import socketIOClient from "socket.io-client";
-const SERVER_ENDPOINT = process.env.SERVER_ENDPOINT;
+const SERVER_ENDPOINT = 'https://mclark-chat-app-server.herokuapp.com';
 
 const socket = socketIOClient(SERVER_ENDPOINT, {transports: ['websocket']});
 
