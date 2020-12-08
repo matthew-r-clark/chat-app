@@ -1,4 +1,6 @@
 import React from 'react';
+import UserMessage from './UserMessage.js';
+import StatusMessage from './StatusMessage.js';
 import SocketContext from './SocketContext';
 
 class MessageList extends React.Component {
@@ -14,8 +16,7 @@ class MessageList extends React.Component {
       let username = this.props.username;
       let sender = message.sender;
       let recipient = message.recipient;
-      let date = getDate();
-      let listItem = <li key={genId()}>{date} - <span className="sender">{sender}</span>: {message.text}</li>;
+      let listItem = <UserMessage id={genId()} message={message}/>
 
       let conversation;
       if (sender === username || recipient === 'General') {
@@ -33,7 +34,7 @@ class MessageList extends React.Component {
 
     socket.on('user status', status => {
       let sender = status.sender;
-      let listItem = <li key={genId()} className="status">{status.message}</li>
+      let listItem = <StatusMessage id={genId()} message={status.message}/>;
 
       let messages = this.state[sender] || [];
       messages.push(listItem);
@@ -82,23 +83,3 @@ let genId = (function() {
     return count;
   }
 })();
-
-function getDate() {
-  let afternoon = false;
-  let date = new Date();
-  let hours = date.getHours();
-  if (hours > 12) {
-    hours -= 12;
-    afternoon = true;
-  } else if (hours === 0) {
-    hours += 12;
-  }
-  let minutes = date.getMinutes();
-
-  return `${p(hours)}:${p(minutes)}${afternoon ? 'pm' : 'am'}`;
-}
-
-function p(number) {
-  number = String(number);
-  return number.padStart(2, '0');
-} 
