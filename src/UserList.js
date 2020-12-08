@@ -59,9 +59,11 @@ class UserList extends React.Component {
     let users = this.props.users;
     let selected = this.props.selected;
     let badges = this.state.badges;
+    let username = this.props.username;
 
     return (
       <div id="online">
+        <p id="display-username">Signed in as {username}</p>
         <h2>Chats:</h2>
         <ul id="users">
           <li key="general"

@@ -113,3 +113,8 @@ form button {
 .sender {
   font-weight: bold;
 }
+
+#display-username {
+  text-align: center;
+  color: gray;
+}
