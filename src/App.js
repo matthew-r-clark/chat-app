@@ -20,11 +20,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    socket.on('request username', () => {
-      let name = prompt('Please enter your name:')
-      this.setState({username: name});
-      socket.emit('join chat', {username: name});
-    });
+    let name = prompt('Please enter your name:')
+    this.setState({username: name});
+    socket.emit('join chat', {username: name});
 
     socket.on('invalid name', (message) => {
       let name = prompt(message)
